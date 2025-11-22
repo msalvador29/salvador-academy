@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { SanityLive } from "@/sanity/lib/live";
 
-import "./globals.css";
+import "../globals.css";
 
 export const metadata: Metadata = {
   title: "Salvador Academy",
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {children}
       </body>
+      <SanityLive />
     </html>
   );
 }
