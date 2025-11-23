@@ -9,7 +9,6 @@ interface UnitPageProps {
 }
 
 export default async function UnitPage({ params }: UnitPageProps) {
-  // Next 16: params is a Promise
   const { unitSlug } = await params;
 
   const unit = await getUnitBySlug(unitSlug);
@@ -25,13 +24,9 @@ export default async function UnitPage({ params }: UnitPageProps) {
   return (
     <main className="min-h-screen bg-white text-slate-900">
       <div className="mx-auto max-w-4xl px-6 py-10">
-        {/* Breadcrumbs (no Salvador Academy) */}
+        {/* Breadcrumbs */}
         <nav className="mb-4 text-sm text-slate-500">
-          {subjectTitle && (
-            <>
-              <span>{subjectTitle}</span>
-            </>
-          )}
+          {subjectTitle && <span>{subjectTitle}</span>}
           {strandTitle && (
             <>
               <span className="mx-1 text-slate-400">/</span>
@@ -39,7 +34,7 @@ export default async function UnitPage({ params }: UnitPageProps) {
             </>
           )}
           <span className="mx-1 text-slate-400">/</span>
-          <span className="text-slate-700 font-medium">{unit.title}</span>
+          <span className="font-medium text-slate-700">{unit.title}</span>
         </nav>
 
         {/* Unit header */}
@@ -68,37 +63,86 @@ export default async function UnitPage({ params }: UnitPageProps) {
               No lessons have been added to this unit yet.
             </p>
           ) : (
-            <ul className="space-y-3">
-              {lessons.map((lesson: any) => (
-                <li
-                  key={lesson._id}
-                  className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 transition hover:bg-slate-100"
-                >
-                  <Link href={`/lessons/${lesson.slug}`}>
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-xs uppercase tracking-wide text-slate-400">
-                          {lesson.fullCode ?? `Lesson ${lesson.code}`}
-                        </p>
-                        <h3 className="text-sm font-medium text-slate-900">
-                          {lesson.title}
-                        </h3>
-                        {lesson.description && (
-                          <p className="mt-1 text-xs text-slate-600">
-                            {lesson.description.trim()}
-                          </p>
-                        )}
-                      </div>
+            <ul className="space-y-4">
+              {lessons.map((lesson) => {
+                const lessonCodeLabel =
+                  lesson.fullCode ?? `Lesson ${lesson.code}`;
+                const scList = lesson.successCriteria ?? [];
+                const keyQuestions = lesson.keyQuestions ?? [];
 
-                      {typeof lesson.successCriteriaCount === "number" && (
-                        <span className="shrink-0 rounded-full bg-slate-200 px-2 py-0.5 text-[11px] font-medium text-slate-700">
-                          {lesson.successCriteriaCount} SC
-                        </span>
-                      )}
-                    </div>
-                  </Link>
-                </li>
-              ))}
+                return (
+                  <li
+                    key={lesson._id}
+                    className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:bg-slate-100"
+                  >
+                    {/* Header row is clickable */}
+                    <Link href={`/lessons/${lesson.slug}`}>
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-xs uppercase tracking-wide text-slate-400">
+                            {lessonCodeLabel}
+                          </p>
+                          <h3 className="text-sm font-medium text-slate-900">
+                            {lesson.title}
+                          </h3>
+                          {lesson.description && (
+                            <p className="mt-1 text-xs text-slate-600">
+                              {lesson.description.trim()}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* ✅ removed SC pill */}
+                      </div>
+                    </Link>
+
+                    {/* Success Criteria checklist */}
+                    {scList.length > 0 && (
+                      <section className="mt-3 rounded-lg bg-white px-3 py-2 border border-slate-200">
+                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                          Success Criteria
+                        </h4>
+                        <ul className="space-y-2 text-sm text-slate-800">
+                          {scList.map((sc) => (
+                            <li key={sc._id}>
+                              <label className="flex items-start gap-3 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  className="mt-0.5 h-4 w-4 rounded border border-slate-400 accent-slate-900
+                                             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/40
+                                             focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                                />
+                                <p className="text-sm text-slate-800">
+                                  {sc.description?.trim()}
+                                </p>
+                              </label>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    )}
+
+                    {/* Key Questions list */}
+                    {keyQuestions.length > 0 && (
+                      <section className="mt-3 rounded-lg bg-white px-3 py-2 border border-slate-200">
+                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                          Key Questions
+                        </h4>
+                        <ul className="space-y-1 text-sm text-slate-800">
+                          {keyQuestions.map((kq) => (
+                            <li key={kq._id} className="flex gap-2">
+                              <span className="text-[11px] font-medium text-slate-400">
+                                Part {kq.order}
+                              </span>
+                              <span>{kq.question}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           )}
         </section>

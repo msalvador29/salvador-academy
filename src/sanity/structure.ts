@@ -2,13 +2,13 @@
 import type {StructureResolver} from 'sanity/structure'
 
 // icons
-import { LibraryBig, BadgeQuestionMark } from "lucide-react";
+import { LibraryBig, FileQuestion } from "lucide-react";
 
 export const structure: StructureResolver = (S) =>
   S.list()
     .title("Salvador Studio")
     .items([
-      // 📚 CONTENT GROUP
+      // CONTENT GROUP
       S.listItem()
         .title("Content")
         .icon(LibraryBig)
@@ -21,13 +21,14 @@ export const structure: StructureResolver = (S) =>
               S.documentTypeListItem("unit").title("Units"),
               S.documentTypeListItem("lesson").title("Lessons"),
               S.documentTypeListItem("successCriteria").title("Success Criteria"),
+              S.documentTypeListItem("keyQuestion").title("Key Questions"),
             ])
         ),
 
-      // ❓ QUESTIONS GROUP
+      // QUESTIONS GROUP
       S.listItem()
         .title("Questions")
-        .icon(BadgeQuestionMark)
+        .icon(FileQuestion)
         .child(
           S.list()
             .title("Questions")

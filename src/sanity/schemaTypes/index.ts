@@ -6,6 +6,7 @@ import { unitType } from './unitType'
 import { lessonType } from './lessonType'
 import { successCriteriaType } from './successCriteriaType'
 import { questionBankType } from './questionBankType'
+import { keyQuestionType } from './keyQuestionType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -14,6 +15,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     unitType,
     lessonType,
     successCriteriaType,
-    questionBankType
+    questionBankType,
+    keyQuestionType
   ],
 }
