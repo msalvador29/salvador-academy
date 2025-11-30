@@ -34,6 +34,9 @@ export const structure: StructureResolver = (S) =>
             .title("Questions")
             .items([
               S.documentTypeListItem("questionBank").title("Question Banks"),
+              S.documentTypeListItem("multipleChoiceQuestion").title("Multiple Choice Questions"),
+              S.documentTypeListItem("numericalAnswerQuestion").title("Numerical Answer Questions"),
+              S.documentTypeListItem("multiPartQuestion").title("Multi-Part Questions"),
             ])
         ),
     ]);

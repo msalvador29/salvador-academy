@@ -3,6 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
 /* Global Styles */
 body {
   background: white;
@@ -125,3 +126,14 @@ body {
   }
 }
 
+/* Custom Styles */
+
+.accent1 {
+  @apply text-fuchsia-400;
+}
+.accent2 {
+  @apply text-sky-500;
+}
+.accent3 {
+  @apply text-teal-500;
+}

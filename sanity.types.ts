@@ -13,6 +13,193 @@
  */
 
 // Source: schema.json
+export type TableOfValues = {
+  _type: "tableOfValues";
+  title?: string;
+  xLabel?: string;
+  yLabel?: string;
+  headerColor?: "bg-black" | "bg-blue-500" | "bg-red-400" | "bg-violet-400";
+  rows?: Array<{
+    x?: string;
+    y?: string;
+    _type: "row";
+    _key: string;
+  }>;
+};
+
+export type LatexBlock = {
+  _type: "latexBlock";
+  latex?: string;
+};
+
+export type ContentWithInlineMath = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+  listItem?: "bullet" | "number";
+  markDefs?: Array<{
+    href?: string;
+    _type: "link";
+    _key: string;
+  }>;
+  level?: number;
+  _type: "block";
+  _key: string;
+}>;
+
+export type ContentWithBlockMath = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+  listItem?: "bullet" | "number";
+  markDefs?: Array<{
+    href?: string;
+    _type: "link";
+    _key: string;
+  }>;
+  level?: number;
+  _type: "block";
+  _key: string;
+} | {
+  asset?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+  };
+  media?: unknown;
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+  _key: string;
+} | {
+  _key: string;
+} & LatexBlock | {
+  _key: string;
+} & TableOfValues>;
+
+export type MultipleChoiceOptionStringOnly = {
+  _type: "multipleChoiceOptionStringOnly";
+  content?: string;
+  isCorrect?: boolean;
+};
+
+export type MultipleChoiceOption = {
+  _type: "multipleChoiceOption";
+  content?: ContentWithBlockMath;
+  isCorrect?: boolean;
+};
+
+export type MultiPartQuestion = {
+  _id: string;
+  _type: "multiPartQuestion";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  questionBank?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "questionBank";
+  };
+  content?: ContentWithBlockMath;
+  parts?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "multipleChoiceQuestion";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "numericalAnswerQuestion";
+  }>;
+};
+
+export type NumericalAnswerQuestion = {
+  _id: string;
+  _type: "numericalAnswerQuestion";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  questionBank?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "questionBank";
+  };
+  content?: ContentWithBlockMath;
+  instructions?: ContentWithBlockMath;
+  answerPrefix?: ContentWithInlineMath;
+  numericalAnswer?: number;
+  precision?: number;
+  tolerance?: number;
+  unitsOptions?: Array<{
+    _key: string;
+  } & MultipleChoiceOptionStringOnly>;
+  isRandomised?: boolean;
+};
+
+export type MultipleChoiceQuestion = {
+  _id: string;
+  _type: "multipleChoiceQuestion";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  questionBank?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "questionBank";
+  };
+  content?: ContentWithBlockMath;
+  instructions?: ContentWithBlockMath;
+  options?: Array<{
+    _key: string;
+  } & MultipleChoiceOption>;
+  isRandomised?: boolean;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
+};
+
+export type KeyQuestion = {
+  _id: string;
+  _type: "keyQuestion";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  lesson?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "lesson";
+  };
+  order?: number;
+  question?: string;
+};
+
 export type QuestionBank = {
   _id: string;
   _type: "questionBank";
@@ -167,22 +354,6 @@ export type SanityImageMetadata = {
   isOpaque?: boolean;
 };
 
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
-};
-
 export type SanityFileAsset = {
   _id: string;
   _type: "sanity.fileAsset";
@@ -242,11 +413,24 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type AllSanitySchemaTypes = QuestionBank | SuccessCriteria | Lesson | Slug | Unit | Strand | Subject | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
+export type AllSanitySchemaTypes = TableOfValues | LatexBlock | ContentWithInlineMath | ContentWithBlockMath | MultipleChoiceOptionStringOnly | MultipleChoiceOption | MultiPartQuestion | NumericalAnswerQuestion | MultipleChoiceQuestion | SanityImageCrop | SanityImageHotspot | KeyQuestion | QuestionBank | SuccessCriteria | Lesson | Slug | Unit | Strand | Subject | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: ./src/lib/sanity/queries/keyQuestions.ts
+// Variable: getKeyQuestionByIdQuery
+// Query: *[        _type == "keyQuestion" &&        _id == $keyQuestionId    ][0]{        _id,        question,        lesson->{            _id,            title,            fullCode        }    }
+export type GetKeyQuestionByIdQueryResult = {
+  _id: string;
+  question: string | null;
+  lesson: {
+    _id: string;
+    title: string | null;
+    fullCode: string | null;
+  } | null;
+} | null;
+
 // Source: ./src/lib/sanity/queries/lessons.ts
 // Variable: getLessonBySlugQuery
-// Query: *[_type == "lesson" && slug.current == $slug][0]{    _id,    title,    fullCode,    code,    description,    // Unit and its strand & subject    "unit": unit->{      _id,      title,      fullCode,      "slug": slug.current,      "strand": strand->{        _id,        title,        code,        "slug": slug.current,        "subject": subject->{          _id,          title,          code,          "slug": slug.current        }      }    },    // Success criteria for this lesson    "successCriteria": *[      _type == "successCriteria" &&      lesson._ref == ^._id    ] | order(code asc){      _id,      code,      description    },    // Optional: prerequisites, if you keep that field    "prerequisites": prerequisites[]->{      _id,      title,      fullCode,      "slug": slug.current    }  }
+// Query: *[_type == "lesson" && slug.current == $slug][0]{      _id,      title,      fullCode,      code,      description,      // Unit and its strand & subject      "unit": unit->{        _id,        title,        fullCode,        "slug": slug.current,        "strand": strand->{          _id,          title,          code,          "slug": slug.current,          "subject": subject->{            _id,            title,            code,            "slug": slug.current          }        }      },      // Success criteria for this lesson      "successCriteria": *[        _type == "successCriteria" &&        lesson._ref == ^._id      ] | order(code asc) {        _id,        code,        description      },      // Key questions (lesson parts)      "keyQuestions": *[        _type == "keyQuestion" &&        lesson._ref == ^._id      ] | order(order asc) {        _id,        order,        question      },      "prerequisites": prerequisites[]->{        _id,        title,        fullCode,        "slug": slug.current      }    }
 export type GetLessonBySlugQueryResult = {
   _id: string;
   title: string | null;
@@ -276,6 +460,11 @@ export type GetLessonBySlugQueryResult = {
     code: number | null;
     description: string | null;
   }>;
+  keyQuestions: Array<{
+    _id: string;
+    order: number | null;
+    question: string | null;
+  }>;
   prerequisites: Array<{
     _id: string;
     title: string | null;
@@ -284,9 +473,92 @@ export type GetLessonBySlugQueryResult = {
   }> | null;
 } | null;
 
+// Source: ./src/lib/sanity/queries/questionBank.ts
+// Variable: getQuestionBankByIdQuery
+// Query: *[    _type == "questionBank" &&    _id == $questionBankId  ][0]{    _id,    description,    code,    successCriteria->{      code,      lesson->{        ...,        fullCode      },      description    }  }
+export type GetQuestionBankByIdQueryResult = {
+  _id: string;
+  description: string | null;
+  code: number | null;
+  successCriteria: {
+    code: number | null;
+    lesson: {
+      _id: string;
+      _type: "lesson";
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      unit?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "unit";
+      };
+      prerequisites?: Array<{
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        _key: string;
+        [internalGroqTypeReferenceTo]?: "lesson";
+      }>;
+      title?: string;
+      code?: number;
+      fullCode: string | null;
+      slug?: Slug;
+      description?: string;
+    } | null;
+    description: string | null;
+  } | null;
+} | null;
+
+// Source: ./src/lib/sanity/queries/questions.ts
+// Variable: getQuestionsByQuestionBankIdQuery
+// Query: *[        _type in ["multipleChoiceQuestion", "numericalAnswerQuestion"] &&        questionBank._ref == $questionBankId      ] | order(_createdAt asc) {        ...,    }
+export type GetQuestionsByQuestionBankIdQueryResult = Array<{
+  _id: string;
+  _type: "multipleChoiceQuestion";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  questionBank?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "questionBank";
+  };
+  content?: ContentWithBlockMath;
+  instructions?: ContentWithBlockMath;
+  options?: Array<{
+    _key: string;
+  } & MultipleChoiceOption>;
+  isRandomised?: boolean;
+} | {
+  _id: string;
+  _type: "numericalAnswerQuestion";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  questionBank?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "questionBank";
+  };
+  content?: ContentWithBlockMath;
+  instructions?: ContentWithBlockMath;
+  answerPrefix?: ContentWithInlineMath;
+  numericalAnswer?: number;
+  precision?: number;
+  tolerance?: number;
+  unitsOptions?: Array<{
+    _key: string;
+  } & MultipleChoiceOptionStringOnly>;
+  isRandomised?: boolean;
+}>;
+
 // Source: ./src/lib/sanity/queries/units.ts
 // Variable: getUnitBySlugQuery
-// Query: *[_type == "unit" && slug.current == "introduction-to-relations"][0]{        _id,        title,        fullCode,        code,        order,        description,        // Strand + Subject context        "strand": strand->{        _id,        title,        code,        "slug": slug.current,        "subject": subject->{            _id,            title,            code,            "slug": slug.current        }        },        // All lessons in this unit        "lessons": *[        _type == "lesson" &&        unit._ref == ^._id        ] | order(code asc){        _id,        title,        code,        fullCode,        description,        "slug": slug.current,        // Optional: how many success criteria belong to this lesson        "successCriteriaCount": count(*[            _type == "successCriteria" &&            lesson._ref == ^._id        ])        }  }
+// Query: *[_type == "unit" && slug.current == $slug][0]{      _id,      title,      fullCode,      code,      order,      description,      // Strand + Subject context      "strand": strand->{        _id,        title,        code,        "slug": slug.current,        "subject": subject->{          _id,          title,          code,          "slug": slug.current        }      },      // All lessons in this unit      "lessons": *[        _type == "lesson" &&        unit._ref == ^._id      ] | order(code asc){        _id,        title,        code,        fullCode,        description,        "slug": slug.current,        // Success criteria for this lesson        "successCriteria": *[          _type == "successCriteria" &&          lesson._ref == ^._id        ] | order(code asc){          _id,          code,          description        },        // Key questions for this lesson        "keyQuestions": *[          _type == "keyQuestion" &&          lesson._ref == ^._id        ] | order(order asc){          _id,          order,          question        },        // Optional: how many success criteria belong to this lesson        "successCriteriaCount": count(*[          _type == "successCriteria" &&          lesson._ref == ^._id        ])      }    }
 export type GetUnitBySlugQueryResult = {
   _id: string;
   title: string | null;
@@ -313,6 +585,16 @@ export type GetUnitBySlugQueryResult = {
     fullCode: string | null;
     description: string | null;
     slug: string | null;
+    successCriteria: Array<{
+      _id: string;
+      code: number | null;
+      description: string | null;
+    }>;
+    keyQuestions: Array<{
+      _id: string;
+      order: number | null;
+      question: string | null;
+    }>;
     successCriteriaCount: number;
   }>;
 } | null;
@@ -321,7 +603,10 @@ export type GetUnitBySlugQueryResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "*[_type == \"lesson\" && slug.current == $slug][0]{\n    _id,\n    title,\n    fullCode,\n    code,\n    description,\n\n    // Unit and its strand & subject\n    \"unit\": unit->{\n      _id,\n      title,\n      fullCode,\n      \"slug\": slug.current,\n      \"strand\": strand->{\n        _id,\n        title,\n        code,\n        \"slug\": slug.current,\n        \"subject\": subject->{\n          _id,\n          title,\n          code,\n          \"slug\": slug.current\n        }\n      }\n    },\n\n    // Success criteria for this lesson\n    \"successCriteria\": *[\n      _type == \"successCriteria\" &&\n      lesson._ref == ^._id\n    ] | order(code asc){\n      _id,\n      code,\n      description\n    },\n\n    // Optional: prerequisites, if you keep that field\n    \"prerequisites\": prerequisites[]->{\n      _id,\n      title,\n      fullCode,\n      \"slug\": slug.current\n    }\n  }": GetLessonBySlugQueryResult;
-    "*[_type == \"unit\" && slug.current == \"introduction-to-relations\"][0]{\n        _id,\n        title,\n        fullCode,\n        code,\n        order,\n        description,\n\n        // Strand + Subject context\n        \"strand\": strand->{\n        _id,\n        title,\n        code,\n        \"slug\": slug.current,\n        \"subject\": subject->{\n            _id,\n            title,\n            code,\n            \"slug\": slug.current\n        }\n        },\n\n        // All lessons in this unit\n        \"lessons\": *[\n        _type == \"lesson\" &&\n        unit._ref == ^._id\n        ] | order(code asc){\n        _id,\n        title,\n        code,\n        fullCode,\n        description,\n        \"slug\": slug.current,\n        // Optional: how many success criteria belong to this lesson\n        \"successCriteriaCount\": count(*[\n            _type == \"successCriteria\" &&\n            lesson._ref == ^._id\n        ])\n        }\n  }": GetUnitBySlugQueryResult;
+    "*[\n        _type == \"keyQuestion\" &&\n        _id == $keyQuestionId\n    ][0]{\n        _id,\n        question,\n        lesson->{\n            _id,\n            title,\n            fullCode\n        }\n    }": GetKeyQuestionByIdQueryResult;
+    "*[_type == \"lesson\" && slug.current == $slug][0]{\n      _id,\n      title,\n      fullCode,\n      code,\n      description,\n\n      // Unit and its strand & subject\n      \"unit\": unit->{\n        _id,\n        title,\n        fullCode,\n        \"slug\": slug.current,\n        \"strand\": strand->{\n          _id,\n          title,\n          code,\n          \"slug\": slug.current,\n          \"subject\": subject->{\n            _id,\n            title,\n            code,\n            \"slug\": slug.current\n          }\n        }\n      },\n\n      // Success criteria for this lesson\n      \"successCriteria\": *[\n        _type == \"successCriteria\" &&\n        lesson._ref == ^._id\n      ] | order(code asc) {\n        _id,\n        code,\n        description\n      },\n\n      // Key questions (lesson parts)\n      \"keyQuestions\": *[\n        _type == \"keyQuestion\" &&\n        lesson._ref == ^._id\n      ] | order(order asc) {\n        _id,\n        order,\n        question\n      },\n\n      \"prerequisites\": prerequisites[]->{\n        _id,\n        title,\n        fullCode,\n        \"slug\": slug.current\n      }\n    }": GetLessonBySlugQueryResult;
+    "*[\n    _type == \"questionBank\" &&\n    _id == $questionBankId\n  ][0]{\n    _id,\n    description,\n    code,\n    successCriteria->{\n      code,\n      lesson->{\n        ...,\n        fullCode\n      },\n      description\n    }\n  }": GetQuestionBankByIdQueryResult;
+    "*[\n        _type in [\"multipleChoiceQuestion\", \"numericalAnswerQuestion\"] &&\n        questionBank._ref == $questionBankId\n      ] | order(_createdAt asc) {\n        ...,\n    }": GetQuestionsByQuestionBankIdQueryResult;
+    "*[_type == \"unit\" && slug.current == $slug][0]{\n      _id,\n      title,\n      fullCode,\n      code,\n      order,\n      description,\n\n      // Strand + Subject context\n      \"strand\": strand->{\n        _id,\n        title,\n        code,\n        \"slug\": slug.current,\n        \"subject\": subject->{\n          _id,\n          title,\n          code,\n          \"slug\": slug.current\n        }\n      },\n\n      // All lessons in this unit\n      \"lessons\": *[\n        _type == \"lesson\" &&\n        unit._ref == ^._id\n      ] | order(code asc){\n        _id,\n        title,\n        code,\n        fullCode,\n        description,\n        \"slug\": slug.current,\n\n        // Success criteria for this lesson\n        \"successCriteria\": *[\n          _type == \"successCriteria\" &&\n          lesson._ref == ^._id\n        ] | order(code asc){\n          _id,\n          code,\n          description\n        },\n\n        // Key questions for this lesson\n        \"keyQuestions\": *[\n          _type == \"keyQuestion\" &&\n          lesson._ref == ^._id\n        ] | order(order asc){\n          _id,\n          order,\n          question\n        },\n\n        // Optional: how many success criteria belong to this lesson\n        \"successCriteriaCount\": count(*[\n          _type == \"successCriteria\" &&\n          lesson._ref == ^._id\n        ])\n      }\n    }": GetUnitBySlugQueryResult;
   }
 }

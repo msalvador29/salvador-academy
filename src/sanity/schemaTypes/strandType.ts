@@ -78,7 +78,7 @@ export const strandType = defineType({
   
       return {
         title: `${code} : ${formattedTitle}`,
-        subtitle: `${slug?.current}`,
+        subtitle: `${slug}`,
         media: BookText,
       };
     },

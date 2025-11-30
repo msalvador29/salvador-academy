@@ -32,9 +32,8 @@ export const questionBankType = defineType({
       validation: (Rule) => Rule.required()
         .min(1)
         .max(25)
-        .integer()
         .positive()
-        .error("Code is required."),
+        .error("Code is required. Should be positive."),
     }),
     defineField({
       name: "level",

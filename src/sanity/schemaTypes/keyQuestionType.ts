@@ -18,36 +18,45 @@ export const keyQuestionType = defineType({
       validation: (Rule) => Rule.required().error("Lesson is required."),
     }),
     defineField({
-      name: "order",
-      title: "Order",
-      type: "number",
-      description: "The order of the key question in the lesson (unique per lesson).",
-      validation: (Rule) => Rule.required().error("Order is required.")
-        .min(1)
-        .max(25)
-        .integer()
-        .positive(),
+      name: "question",
+      title: "Question Header",
+      type: "headerContent",
+      description: "The key question of the lesson. Please limit to one block.",
+      validation: (Rule) => Rule.required().error("Question is required."),
     }),
     defineField({
-      name: "question",
-      title: "Question",
-      type: "string",
-      description: "The key question of the lesson.",
-      validation: (Rule) => Rule.required().error("Question is required."),
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      description: "The slug of the key question.",
+      options: {
+        source: "question",
+        maxLength: 96
+        },
+      validation: (Rule) => Rule.required().error("Slug is required."),
+    }),
+    defineField({
+      name: "content",
+      title: "Answer / Article Content",
+      type: "lessonContent"
     }),
   ],
   preview: {
     select: {
       lesson: "lesson.title",
       lessonCode: "lesson.fullCode",
-      question: "question",
-      order: "order",
+      questionParts: "question.0.children"
     },
-    prepare({ lesson, lessonCode, question, order }) {
+    prepare({ lesson, lessonCode, questionParts }) {
+      const question =
+      Array.isArray(questionParts)
+        ? questionParts.map((part) => part.text || "").join("")
+        : "";
+
       return {
         title: `${question || ""}`,
-        subtitle: `${lessonCode || "" }-KQ${order || "" } :${lesson || "" } `,
-        media: CircleQuestionMark,
+        subtitle: `KQ | ${lessonCode || "" } : ${lesson || "" } `,
+        media: CircleQuestionMark
       };
     },
   },

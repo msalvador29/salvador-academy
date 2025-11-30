@@ -91,8 +91,6 @@ export default async function UnitPage({ params }: UnitPageProps) {
                             </p>
                           )}
                         </div>
-
-                        {/* ✅ removed SC pill */}
                       </div>
                     </Link>
 

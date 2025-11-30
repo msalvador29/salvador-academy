@@ -1,7 +1,6 @@
 import { getLessonBySlug } from "@/lib/sanity/queries/lessons";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import type { Lesson } from "@/sanity.types";
 
 interface LessonPageProps {
   params: Promise<{
@@ -12,7 +11,7 @@ interface LessonPageProps {
 export default async function LessonPage({ params }: LessonPageProps) {
   const { lessonSlug } = await params;
 
-  const lesson = (await getLessonBySlug(lessonSlug)) as Lesson | null;
+  const lesson = (await getLessonBySlug(lessonSlug));
 
   if (!lesson) notFound();
 

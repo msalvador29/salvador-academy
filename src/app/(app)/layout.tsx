@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { SanityLive } from "@/lib/sanity/live";
 
+
 import "../globals.css";
+import "katex/dist/katex.min.css";
 
 export const metadata: Metadata = {
   title: "Salvador Academy",
